@@ -161,6 +161,8 @@ nhrPlotGoals(goal);
 dt = 0.2;
 t = 0;
 x_true= [];
+% attack enable
+enableAttack = 1;
 
 error(1) = sqrt((goal(1).x - robot.x)^2 +  (goal(1).y - robot.y)^2);
 desiredVel = 6;
@@ -170,15 +172,15 @@ prevVelError = 0;
 var1 = 0.1;
 var2 = 0.2;
 %input noise
-varInput = 0.5;
+varInput = 0.01;
 %initial state
 u = [0;
      0;
      0.1;
      0.1
      ];
-x_true(:,1) = [25;
-          25
+x_true(:,1) = [20;
+          50
           ];
 x(:,1) = [round(100 *rand(1,1));
      round(100 *rand(1,1));
@@ -190,7 +192,7 @@ F = [1  0  dt 0 ;
      0  0  1  0 ;
      0  0  0  1];
  
-B = [0 0 0 0 ;
+B = [0 0 0 0 ;  
      0 0 0 0 ;
      0 0 1 0 ;
      0 0 0 1 ];
@@ -218,19 +220,23 @@ index = 2;
 v(1) = 0;
 while(error(index-1) > 2)
     %calculate the actual state based on previous input.
-   % x_true = (F*x_true + B*u);
-   x_true(1,index) = x_true(1,index-1)+ dt *u(3);
-   x_true(2,index) = x_true(2,index-1)+ dt *u(4);
-  %  x_true_sim{k} = x_true;
+    % x_true = (F*x_true + B*u);
+    x_true(1,index) = x_true(1,index-1)+ dt *u(3);
+    x_true(2,index) = x_true(2,index-1)+ dt *u(4);
+    %  x_true_sim{k} = x_true;
     % generate sensor mesaurements with noise.
     Z(:,index) = [x_true(1,index) + normrnd(0,sqrt(var1));
-         x_true(2,index) + normrnd(0,sqrt(var1));
-         x_true(1,index) + normrnd(0,sqrt(var2));
-         x_true(2,index) + normrnd(0,sqrt(var2))
-         ];
+                  x_true(2,index) + normrnd(0,sqrt(var1));
+                  x_true(1,index) + normrnd(0,sqrt(var2));
+                  x_true(2,index) + normrnd(0,sqrt(var2))
+                 ];
+    % attack
+    if(enableAttack == 1)
+        Z(2,index) = Z(2,index) + index/10;
+    end
     % prediction
     P1 = F*P*F' + Q;
-    S = H*P1*H' + R;
+    S  = H*P1*H' + R;
     
     % measurements update
     K = P1*H'*inv(S);
@@ -241,7 +247,7 @@ while(error(index-1) > 2)
     robot.y = x(2,index);
     robot.v = sqrt(x(3,index)^2 + x(4,index)^2);
     v(index) = robot.v;
-   % velocity_sim{k} = robot.v;
+    % velocity_sim{k} = robot.v;
     
     %PID controller
     velError = desiredVel - robot.v;
@@ -255,7 +261,7 @@ while(error(index-1) > 2)
          0;
          ux + normrnd(0,sqrt(varInput));
          uy + + normrnd(0,sqrt(varInput))
-         ];
+        ];
      
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %plot robot position and velocity
@@ -265,6 +271,8 @@ while(error(index-1) > 2)
     axes(handles.axes1);
     %robotPlot = nhrUpdateRobotPlot(robot, robotPlot, 'r');
     plot(robot.x,robot.y, '.', 'Color', 'r');
+    plot(Z(1,index), Z(2,index), '.', 'Color', 'b');
+    plot(Z(3,index), Z(4,index), '.', 'Color', 'g');
     axes(handles.axes2); %set the current axes to axes2
     ylabel('velocity (m/s)');
     xlabel('time (sec)');
