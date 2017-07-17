@@ -60,16 +60,18 @@ fill(xe,ye,[0.8, 0.9, 0.9])
 hold on
 % xg=[0 boundary_x-3 boundary_x-3 0 0]
 % yg=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1]
+% One goal at the top right corner
 xg=[boundary_x-1 boundary_x boundary_x boundary_x-1 boundary_x-1];
-yg=[boundary_y-3 boundary_y-3 boundary_y boundary_y boundary_y-3];
+yg=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1];
 fill(xg,yg,[0.4, 0.99, 0.8])
 hold on
 % xb=[boundary_x-3 boundary_x boundary_x boundary_x-3 boundary_x-3]
 % yb=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1]
-xb=[boundary_x-1 boundary_x boundary_x boundary_x-1 boundary_x-1];
-yb=[0 0 boundary_y-3 boundary_y-3 0];
-fill(xb,yb,[0.9, 0.5, 0.5])
-hold on
+% No bad goals
+%xb=[boundary_x-1 boundary_x boundary_x boundary_x-1 boundary_x-1];
+%yb=[0 0 boundary_y-3 boundary_y-3 0];
+%fill(xb,yb,[0.9, 0.5, 0.5])
+%hold on
  
 % xo1=[3 4 4 3 3];
 % yo2=[3 3 4 4 3];

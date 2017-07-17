@@ -88,27 +88,20 @@ goal = [mx, my, 0]
 %% Goal Inference
 % Observation O is a set of state-action pairs
 o.action = direction;
-global goals_normalized_posterior;
 o.state = (floor(pos(2)) * 5) +floor(pos(1))+1; % cell position represents a state. Range is 1-25 counting row by row.
 goals_normalized_posterior = update_goals_posterior(o);
 
 %% Plot infered goals
 global goals_set;
 for i = 1: length(goals_set)
-    q = floor(goals_set(i)/5) + 1; %quotient represents the column number (Y)
-    r = rem(goals_set(i),5); % remainder represents the row number (X)
-    if(r == 0)
-        r = 5;
-        q = goals_set(i)/5;
-    end
-    % calculate the coordinates of the 4 corners of the square to fill
-    x_plot = [r-1 r-1 r r r-1]; 
-    y_plot = [q-1 q q q-1 q-1];
-    % fill the potential goal with its value from the color mapped
-    % posterior
-    fill(x_plot,y_plot,goals_normalized_posterior(i));
+    quotient = floor(goals_set(i)/5); %quotient represents the row number
+    remainder = rem(goals_set(i),5); % remainder represents the column ru
+    x_plot = [goals_set(i)/25
 end
-
+goals_normalized_posterior
+xe=[0 boundary_x boundary_x 0 0];
+ye=[0 0 boundary_y boundary_y 0];
+fill(xe,ye,[0.8, 0.9, 0.9])
 end
 
 % % move backward

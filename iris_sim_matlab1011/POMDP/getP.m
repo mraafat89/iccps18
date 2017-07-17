@@ -6,7 +6,7 @@
     % 1 2 3
     %
    %MR function    [P, policy1, policy2] = getP(Nr, Nc, c, d) 
- function    [P, policy1] = getP(Nr, Nc) 
+ function    [Q, P, policy1] = getP(Nr, Nc) 
 pf= 0.8;
 pl= 0.1;
 pr= 0.1;
@@ -134,7 +134,8 @@ mdp_check(P, R)
 %% RUN MDP
 
 discount = 0.9; %0.01999999
-[V1, policy1] = mdp_policy_iteration(P, R, discount)
+% [V1, policy1] = mdp_policy_iteration(P, R, discount)
+[Q, V1, policy1] = mdp_Q_learning(P, R, discount)
 
 %% RUN ARMDP
 % Attacks makes me believe that I'm either in 5(2 sensors) or 6(1 sensor).

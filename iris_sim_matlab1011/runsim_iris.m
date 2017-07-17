@@ -30,6 +30,7 @@ v_max = 0.5; % v < 5.5 (SImulation Experimental Value)
 disp('Generating Trajectory ...');
 trajectory_generator([], [], map, path);
 
+initialize_goals_inference();
 %% Run trajectory
 controlhandle = @Linearcontroller;
 trajectory = test_trajectory(start, stop, map, path, controlhandle, true, env); % with visualization
