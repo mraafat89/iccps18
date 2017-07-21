@@ -1,14 +1,15 @@
 function goals_normalized_posterior = update_goals_posterior(o)
     global goals_set;
     global goals_posterior;
+    global goals_prior;
    % loop for each goal in the set
     pf= 0.8;
     pl= 0.1;
     pr= 0.1;
     pb= 0;
     Na = 4; %number of actions
-    Nr = 5; %number of rows
-    Nc = 5; %number of columns
+    Nr = 6; %number of rows
+    Nc = 6; %number of columns
     Ntot = Nr*Nc; %number of cells
 
 
@@ -102,6 +103,7 @@ function goals_normalized_posterior = update_goals_posterior(o)
     end
     P(:,:,4)
     R(:,1) = -3*ones(1,Ntot);
+    discount = 0.9; %0.01999999
     for i = 1: length(goals_set)
         R(goals_set(i))=100;
         R(:,2) = R(:,1);
@@ -110,10 +112,11 @@ function goals_normalized_posterior = update_goals_posterior(o)
         %% CHECK
         mdp_check(P, R)
         %% RUN MDP
-        discount = 0.9; %0.01999999
         [Q, V1, policy1] = mdp_Q_learning(P, R, discount);
-        goal_likelihood = exp(Q(o.state,o.action))/sum(exp(Q(o.state,:)));
-        goals_posterior(i) = goal_likelihood * goals_posterior(i);
+        alpha = 0.3;
+        goal_likelihood = exp(alpha * Q(o.state,o.action))/sum(exp(alpha * Q(o.state,:)));
+        % update goals posterior using Bayes's rule
+        goals_posterior(i) = 0.3 * goal_likelihood * goals_posterior(i);
         %reset goal
         R(goals_set(i))=-3;
     end
