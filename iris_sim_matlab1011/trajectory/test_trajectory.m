@@ -145,7 +145,7 @@ fprintf('Simulation Running....\n')
 iter = 0;
 sim_time = 0;
 % Main loop
-policy = getP(5,5);
+policy = getP(env.boundary(2),env.boundary(2));
 while key ~= 'q'
     iter = iter + 1;
     timeint = time:tstep:time+cstep;

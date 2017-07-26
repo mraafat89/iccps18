@@ -95,7 +95,8 @@ function goals_normalized_posterior = update_goals_posterior(o_s, o_a)
     end
     %% Reward Function
     R(:,1) = -0.01*ones(1,Ntot);
-    discount = 0.9; %0.01999999
+    discount = 0.9; %0.0199999        
+    alpha = 0.9;
     for i = 1: length(goals_set)
         R(goals_set(i))=10;
         R(:,2) = R(:,1);
@@ -106,7 +107,6 @@ function goals_normalized_posterior = update_goals_posterior(o_s, o_a)
         mdp_check(P, R)
         %% RUN MDP
         [Q, V, policy] = mdp_Q_learning(P, R, discount);
-        alpha = 0.7;
         % calculate likelihood numerator and denomenator
         Q_sum = zeros(Na,1); %summation of Q for each action over the observations
         A_sum = 0; % summation of Q of observed actions over the observations

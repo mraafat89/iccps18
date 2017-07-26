@@ -10,7 +10,7 @@ disp('Loading WayPoints ...');
 % waypts = define_waypts();
 
 % [env, waypts] = define_env(5, 5, [3, 1]);
-[env, waypts] = define_env(5, 5, [1, 3]);
+[env, waypts] = define_env(6, 6, [1, 2]);
 
 %% Loading Map (Do NOT change anything here currently)
 map = load_map('maps/emptyMap.txt', 1.0, 2.0, 0.35);
