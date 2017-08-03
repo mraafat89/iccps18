@@ -1,4 +1,4 @@
-function [V, policy] = mdp_bellman_operator(P, PR, discount, Vprev)
+function [Q, V, policy] = mdp_bellman_operator(P, PR, discount, Vprev)
 
 
 % mdp_bellman_operator Applies the Bellman operator on the value function Vprev

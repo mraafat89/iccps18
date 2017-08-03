@@ -1,4 +1,4 @@
-function [V, policy, iter, cpu_time] = mdp_policy_iteration(P, R, discount, policy0, max_iter, eval_type)
+function [Q, V, policy, iter, cpu_time] = mdp_policy_iteration(P, R, discount, policy0, max_iter, eval_type)
 
 
 % mdp_policy_iteration  Resolution of discounted MDP 
@@ -82,7 +82,7 @@ else
     if nargin < 4;
         % initialization of policy: 
         % the one wich maximizes the expected immediate reward
-        [nil, policy0] = mdp_bellman_operator(P,PR,discount,zeros(S,1));
+        [Q, nil, policy0] = mdp_bellman_operator(P,PR,discount,zeros(S,1));
     end;
     
     if mdp_VERBOSE; disp('  Iteration  Number_of_different_actions'); end;
@@ -97,7 +97,7 @@ else
         else
             V = mdp_eval_policy_iterative(P,PR,discount,policy);
         end;
-        [nil, policy_next] = mdp_bellman_operator(P,PR,discount,V);
+        [Q, nil, policy_next] = mdp_bellman_operator(P,PR,discount,V);
         
 	n_different = sum(policy_next ~= policy);
         if mdp_VERBOSE; disp(['       ' num2str(iter) '                 '  num2str(n_different)]); end;
