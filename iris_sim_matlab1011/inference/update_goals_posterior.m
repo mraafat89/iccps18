@@ -98,8 +98,8 @@ pl= 0.1;
 pr= 0.1;
 pb= 0;
 Na = 4; %number of actions
-Nr = 5; %number of rows
-Nc = 5; %number of columns
+Nr = 6; %number of rows
+Nc = 6; %number of columns
 Ntot = Nr*Nc; %number of cells
 
     
