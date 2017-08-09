@@ -98,8 +98,8 @@ pl= 0.1;
 pr= 0.1;
 pb= 0;
 Na = 4; %number of actions
-Nr = 6; %number of rows
-Nc = 6; %number of columns
+Nr = 10; %number of rows
+Nc = 10; %number of columns
 Ntot = Nr*Nc; %number of cells
 
     
@@ -189,6 +189,13 @@ a=4;%E
     end
     %% Reward Function
     R(:,1) = -0.001*ones(1,Ntot);
+    %% Obstacles 
+    R(21)=-1;
+    R(22) = R(21);
+    R(31) = R(21);
+    R(32) = R(21);
+    R(16) = R(21);
+    R(26) = R(21);
     discount = 0.9; %0.0199999        
     alpha = 0.9;
     for i = 1: length(goals_set)

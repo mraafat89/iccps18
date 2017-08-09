@@ -7,7 +7,8 @@ observation_count =0;
 % The set of possible goals contain the cells of the edges on the right,
 % bottom and the top 
 %goals_set = [1,2,3,4,5,10,15,20,21,22,23,24,25];
-goals_set = [1,2,3,4,5,6,12,18,24,30,31,32,33,34,35,36];
+%goals_set = [1,2,3,4,5,6,12,18,24,30,31,32,33,34,35,36];
+goals_set = [1,2,3,4,5,6,7,8,9,10,20,30,40,50,60,70,80,90,91,92,93,94,95,96,97,98,99,100];
 % Initialize the posterior for each goal with a uniform prior for each goal.
 n = length(goals_set);
 uniform_prior = 1/n;
