@@ -1,6 +1,11 @@
 function goal = my_algorithm(t, state, env, policy)
 % state is current state
 % t is current time
+global sensor_readings;
+global attack_drift;
+global attack_enable;
+global last_action;
+global defend;
 %% Do Not Modify Here
     goal = [];
     dimension = env.boundary(2);
@@ -15,8 +20,35 @@ function goal = my_algorithm(t, state, env, policy)
     % mapping measurement
     pos2cell2(pos, env,1,1,1);
 
- 
     if (rem(t,5) <=0.05)
+        %% Begin attack
+         if(t > 5) 
+             if(attack_enable == 1)
+                 attack_drift = attack_drift + 1;
+                 sensor_readings(:,1) = pos;
+                 sensor_readings(:,2) = pos;
+                 sensor_readings(2,2) = sensor_readings(2,2) + attack_drift;
+             else
+                 sensor_readings(:,1) = pos;
+                 sensor_readings(:,2) = pos;
+             end
+         else
+             sensor_readings(:,1) = pos;
+             sensor_readings(:,2) = pos;
+         end
+        %% TODO: KF now just the estimated state is just the average
+        pos = mean(sensor_readings,2);
+        if(defend == 1)
+            if(t > 50)
+                pos = sensor_readings(:,1);
+            end
+        end
+        %% Draw the estimated state
+        r = floor(pos(1))+1;
+        q = floor(pos(2))+1;
+        x_plot = [r-1 r-1 r r r-1]; 
+        y_plot = [q-1 q q q-1 q-1];
+        fill(x_plot,y_plot,[0.8, 0.3, 0.5])
         div=length(policy)/dimension;  
         count=0;
         for i=1:div
@@ -44,7 +76,7 @@ function goal = my_algorithm(t, state, env, policy)
         else
             goal = [mx, my, 0];
         end
-
+        last_action = direction;
         %% Goal Inference
         global goals_normalized_posterior;
         % Observation O is a set of state-action pairs
@@ -53,7 +85,7 @@ function goal = my_algorithm(t, state, env, policy)
         global observed_actions;
         observed_actions(observation_count) = direction;
         global observed_states;
-        observed_states(observation_count) = (floor(pos(2)) * dimension) +floor(pos(1))+1; % cell position represents a state. Range is 1-36 counting row by row.
+        observed_states(observation_count) = (floor(sensor_readings(2,1)) * dimension) +floor(sensor_readings(1,1))+1; % cell position represents a state. Range is 1-36 counting row by row.
         goals_normalized_posterior = update_goals_posterior(observed_states,observed_actions);
 
         %% Plot infered goals

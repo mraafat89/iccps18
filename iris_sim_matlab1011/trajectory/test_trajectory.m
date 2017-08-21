@@ -58,7 +58,7 @@ xe=[0 boundary_x boundary_x 0 0];
 ye=[0 0 boundary_y boundary_y 0];
 fill(xe,ye,[0.8, 0.9, 0.9])
 hold on
-% xg=[0 boundary_x-3 boundary_x-3 0 0]
+% xg=[0 boundary_x- 3 boundary_x-3 0 0]
 % yg=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1]
 % One goal at the top right corner
 xg=[boundary_x-1 boundary_x boundary_x boundary_x-1 boundary_x-1];

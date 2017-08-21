@@ -188,14 +188,17 @@ a=4;%E
         end
     end
     %% Reward Function
-    R(:,1) = -0.001*ones(1,Ntot);
+     R(:,1) = -0.001*ones(1,Ntot);
     %% Obstacles 
-    R(21)=-1;
-    R(22) = R(21);
-    R(31) = R(21);
-    R(32) = R(21);
-    R(16) = R(21);
-    R(26) = R(21);
+     R(94) = -10;
+     R(84) = R(94);
+     R(74) = R(94);
+   % R(21) = -1;
+   % R(22) = R(21);
+   % R(31) = R(21);
+   % R(32) = R(21);
+   % R(16) = R(21);
+   % R(26) = R(21);
     discount = 0.9; %0.0199999        
     alpha = 0.9;
     for i = 1: length(goals_set)
@@ -228,8 +231,8 @@ a=4;%E
         R(goals_set(i))=-0.001;
     end
     %goals_posterior = (goals_posterior-min(goals_posterior))/(max(goals_posterior)-min(goals_posterior)) ;
-    %   goals_normalized_posterior = goals_posterior - min(goals_posterior(:));
- %   goals_normalized_posterior = goals_normalized_posterior ./ max(goals_normalized_posterior(:));
+    %goals_normalized_posterior = goals_posterior - min(goals_posterior(:));
+    %goals_normalized_posterior = goals_normalized_posterior ./ max(goals_normalized_posterior(:));
     maxv = max(goals_posterior(:));
     goals_normalized_posterior = uint8((double(goals_posterior) ./ maxv) .* 255);
 end
