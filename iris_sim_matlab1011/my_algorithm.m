@@ -3,10 +3,16 @@ function goal = my_algorithm(t, state, env, policy)
 % t is current time
 global sensor_readings;
 global attack_drift;
+global active_learning;
 global attack_enable;
 global last_action;
 global defend;
-%% Do Not Modify Here
+global active_learning_counter;
+lambda = 0.5;
+
+active_learning_directions = [4,1,1,1,4,4,4,4,4,4,4,2,2];
+
+
     goal = [];
     dimension = env.boundary(2);
     % current state
@@ -26,8 +32,21 @@ global defend;
              if(attack_enable == 1)
                  attack_drift = attack_drift + 1;
                  sensor_readings(:,1) = pos;
-                 sensor_readings(:,2) = pos;
-                 sensor_readings(2,2) = sensor_readings(2,2) + attack_drift;
+                 %sensor_readings(:,2) = pos;
+                 %sensor_readings(2,2) = sensor_readings(2,2) + attack_drift;
+                 if last_action == 1 %N
+                      sensor_readings(2,2) = sensor_readings(2,2) +1;
+                      sensor_readings(1,2) = sensor_readings(1,2) ;
+                 elseif last_action == 2 %S
+                      sensor_readings(2,2) = sensor_readings(2,2) -1;
+                      sensor_readings(1,2) = sensor_readings(1,2);
+                 elseif last_action == 3 %W
+                      sensor_readings(2,2) = sensor_readings(2,2) +1;
+                      sensor_readings(1,2) = sensor_readings(1,2) -1;
+                 elseif last_action == 4 %E
+                     sensor_readings(2,2) = sensor_readings(2,2) +1;
+                     sensor_readings(1,2) = sensor_readings(1,2) + 1;
+                 end
              else
                  sensor_readings(:,1) = pos;
                  sensor_readings(:,2) = pos;
@@ -38,17 +57,45 @@ global defend;
          end
         %% TODO: KF now just the estimated state is just the average
         pos = mean(sensor_readings,2);
+        if(pos(1) > 10)
+            pos(1) =9.9;
+        end
+        if(pos(2) > 10)
+            pos(2) =9.9;
+        end
+        
         if(defend == 1)
-            if(t > 50)
-                pos = sensor_readings(:,1);
+            if(active_learning == 1)
+                if(t > 60)
+                    pos = sensor_readings(:,1);
+                end
+            else
+                if(t > 45)
+                    pos = sensor_readings(:,1);
+                end
             end
         end
-        %% Draw the estimated state
-        r = floor(pos(1))+1;
-        q = floor(pos(2))+1;
-        x_plot = [r-1 r-1 r r r-1]; 
-        y_plot = [q-1 q q q-1 q-1];
-        fill(x_plot,y_plot,[0.8, 0.3, 0.5])
+        %% Draw the correct sensor data
+    %    r = floor(sensor_readings(1,1))+1;
+    %    q = floor(sensor_readings(2,1))+1;
+    %    x_plot = [r-1 r-1 r r r-1]; 
+    %    y_plot = [q-1 q q q-1 q-1];
+    %    fill(x_plot,y_plot,[0, 1, 0])
+       
+        %% Draw the spoofed sensor data
+%        r = floor(sensor_readings(1,2))+1;
+%        q = floor(sensor_readings(2,2))+1;
+%        x_plot = [r-1 r-1 r r r-1]; 
+%        y_plot = [q-1 q q q-1 q-1];
+%        fill(x_plot,y_plot,[1, 0, 0])
+%        
+%         %% Draw the estimated
+%        r = floor(pos(1))+1;
+%        q = floor(pos(2))+1;
+%        x_plot = [r-1 r-1 r r r-1]; 
+%        y_plot = [q-1 q q q-1 q-1];
+%        fill(x_plot,y_plot,[0, 1, 1])
+%        
         div=length(policy)/dimension;  
         count=0;
         for i=1:div
@@ -58,20 +105,52 @@ global defend;
             end
         end
         direction=c(floor(pos(2))+1,floor(pos(1))+1);
-        if direction == 1 %N
+        applied_direction = direction;
+        %% active learning
+        if active_learning == 1
+           if(t > 20 && t < 25)
+            %  if rand(1) < lambda
+                  % with probability = lambda, generate a random action
+               applied_direction = 1;%ceil(rand(1) * 4);
+             % end
+           elseif(t > 25 && t < 30)
+           % if rand(1) < lambda
+                  % with probability = lambda, generate a random action
+               applied_direction = 1; %ceil(rand(1) * 4);
+           elseif(t > 30 && t < 35)
+               applied_direction = 4;
+           elseif(t > 35 && t < 40)
+               applied_direction = 1;
+           elseif(t > 40 && t < 45)
+               applied_direction = 4;
+            elseif(t > 45 && t < 50)
+               applied_direction = 2;
+            elseif(t > 50 && t < 55)
+               applied_direction = 2;
+            elseif(t > 55 && t < 60)
+               applied_direction = 2;
+            elseif(t > 60 && t < 65)
+               applied_direction = 2;               
+           end
+        %end
+          %$  applied_direction = active_learning_directions(active_learning_counter);
+        %    active_learning_counter = active_learning_counter + 1;
+        end
+        %%
+        if applied_direction == 1 %N
             mx=0;
             my=1;
-        elseif direction == 2 %S
+        elseif applied_direction == 2 %S
             mx=0;
             my=-1;
-        elseif direction == 3 %W
+        elseif applied_direction == 3 %W
             mx=-1;
             my=0;
-        elseif direction == 4 %E
+        elseif applied_direction == 4 %E
             mx=1;
             my=0;
         end
-        if direction == 5 % don't move
+        if applied_direction == 5 % don't move
             goal = []; % no new goal
         else
             goal = [mx, my, 0];

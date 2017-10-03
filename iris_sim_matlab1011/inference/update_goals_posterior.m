@@ -2,6 +2,10 @@ function goals_normalized_posterior = update_goals_posterior(o_s, o_a)
     global goals_set;
     global goals_posterior;
     global goals_prior;
+    global posterior_update_counter;
+    global posterior_mean;
+    global posterior_var; 
+    global maxv;
    % loop for each goal in the set
 % %     Na = 4; %number of actions
 % %     Nr = 5; %number of rows
@@ -190,9 +194,11 @@ a=4;%E
     %% Reward Function
      R(:,1) = -0.001*ones(1,Ntot);
     %% Obstacles 
-     R(94) = -10;
-     R(84) = R(94);
-     R(74) = R(94);
+    % R(34) = -1000;
+    % R(98) = R(34);
+    % R(99) = R(34);
+    % R(84) = R(94);
+    % R(74) = R(94);
    % R(21) = -1;
    % R(22) = R(21);
    % R(31) = R(21);
@@ -233,6 +239,15 @@ a=4;%E
     %goals_posterior = (goals_posterior-min(goals_posterior))/(max(goals_posterior)-min(goals_posterior)) ;
     %goals_normalized_posterior = goals_posterior - min(goals_posterior(:));
     %goals_normalized_posterior = goals_normalized_posterior ./ max(goals_normalized_posterior(:));
-    maxv = max(goals_posterior(:));
-    goals_normalized_posterior = uint8((double(goals_posterior) ./ maxv) .* 255);
+    maxv(posterior_update_counter) = max(goals_posterior(:));
+    goals_normalized_posterior = (double(goals_posterior) ./ maxv(posterior_update_counter)) .* 255;
+    posterior_mean(posterior_update_counter) = mean(goals_normalized_posterior);
+    posterior_var(posterior_update_counter) = var(goals_posterior);
+    %goals_normalized_posterior = uint8((double(goals_posterior) ./ maxv) .* 255);
+   
+    %for i = 1: length(goals_set)
+    %   posterior_var(posterior_update_counter)= posterior_var(posterior_update_counter) + (goals_normalized_posterior(i)-  posterior_mean(posterior_update_counter))^2;   
+    %end
+    
+    posterior_update_counter = posterior_update_counter +1;
 end

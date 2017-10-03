@@ -7,6 +7,7 @@
     %
    %MR function    [P, policy1, policy2] = getP(Nr, Nc, c, d) 
  function    policy = getP(Nr, Nc) 
+ global goals_set;
 % % pf= 0.8;
 % % pl= 0.1;
 % % pr= 0.1;
@@ -230,15 +231,13 @@ a=4;%E
 %% REWARDS
 
 R(:,1) = -3*ones(1,Ntot);
-R(50)= 100;
+
 %R(10)=-1000000000000000000;
-R(9)= -100;
-R(84) = R(94);
-%R(74) = R(94);
-%R(31) = R(21);
-%R(32) = R(21);
-%R(16) = R(21);
-%R(26) = R(21);
+bad_reward = -100;
+for i = 1:length(goals_set)
+    R(goals_set(i)) = bad_reward;
+end
+R(50)= 100;
 
 R(:,2) = R(:,1);
 R(:,3) = R(:,1);

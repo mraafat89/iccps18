@@ -49,7 +49,7 @@ drawnow;
 plot (-10,-10,'r-');
 hold on
 plot (-10,-10,'b-');
-legend('actual trajectory','desired trajectory');
+%legend('actual trajectory','desired trajectory');
 hold on
 
 boundary_x = env.boundary(2, 1);
@@ -61,9 +61,18 @@ hold on
 % xg=[0 boundary_x- 3 boundary_x-3 0 0]
 % yg=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1]
 % One goal at the top right corner
-xg=[boundary_x-1 boundary_x boundary_x boundary_x-1 boundary_x-1];
-yg=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1];
-fill(xg,yg,[0.4, 0.99, 0.8])
+%xg=[boundary_x-1 boundary_x boundary_x boundary_x-1 boundary_x-1];
+%yg=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1];
+%fill(xg,yg,[0.4, 0.99, 0.8])
+%% plot goal
+%x_plot = [9 9 10 10 9]; 
+%y_plot = [4 5 5 4 4];
+%fill(x_plot,y_plot,[0,1,0]);
+%% plot bad goal
+%x_plot = [8 8 9 9 8]; 
+%y_plot = [0 1 1 0 0];
+%fill(x_plot,y_plot,[1,0,0]);
+
 hold on
 % xb=[boundary_x-3 boundary_x boundary_x boundary_x-3 boundary_x-3]
 % yb=[boundary_y-1 boundary_y-1 boundary_y boundary_y boundary_y-1]
