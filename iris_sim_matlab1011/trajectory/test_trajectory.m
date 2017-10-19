@@ -179,7 +179,7 @@ while key ~= 'q'
         x{qn} = add_noise(x{qn});
         %*****************************************************************%
         sim_time = sim_time + cstep; % Update simulation time
-        goal_new = my_algorithm(sim_time, x{qn}, env, policy);
+        goal_new = process_state(sim_time, x{qn}, env, policy);
         if ~isempty(goal_new)
             cmd_start = x{qn}(1:3)';
             cmd_stop = cmd_start + goal_new;

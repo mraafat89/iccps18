@@ -1,4 +1,4 @@
-function goal = my_algorithm(t, state, env, policy)
+function goal = process_state(t, state, env, policy)
 % state is current state
 % t is current time
 global sensor_readings;
