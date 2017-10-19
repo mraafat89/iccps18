@@ -14,8 +14,6 @@ active_learning = 0;
 attack_enable = 1;
 global posterior_update_counter;
 posterior_update_counter = 1;
-global xxx ;
-xxx = load('energy.mat', 'xxx')
 defend = 1;
 observation_count =0;
 % The set of possible goals contain the cells of the edges on the right,
